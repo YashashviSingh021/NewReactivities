@@ -19,6 +19,12 @@ internal class Program
             opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             opt.LogTo(Console.WriteLine, LogLevel.Information);
         });
+        builder.Services.AddCors(opt => {
+            opt.AddPolicy("CorsPolicy", policy =>
+            {
+             policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");   
+            });
+        });
 
         var app = builder.Build();
 
@@ -28,6 +34,8 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseCors("CorsPolicy");
 
         app.UseAuthorization();
 
